@@ -1,8 +1,9 @@
 hello-message: "Привет!!!"
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/bookstore
-    username: root
+    #Connection address may be directly or service name from docker-compose
+    url: jdbc:postgresql://bookstore-postgres:5432/bookstore
+    username: postgres
     password: 12345
     driver-class-name: org.postgresql.Driver
   jpa:
