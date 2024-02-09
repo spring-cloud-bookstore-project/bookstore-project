@@ -1,1 +1,18 @@
-FROM
+version: "2.24"
+
+services:
+
+  bookstore-book:
+    build: "."
+    ports:
+      - "80:8080"
+
+  bookstore-postgres:
+    image: "postgres:16.1"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_DB: "bookstore"
+
+
