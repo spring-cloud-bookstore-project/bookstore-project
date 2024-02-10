@@ -21,7 +21,7 @@ class BookController {
         @RequestHeader(
             name = "Accept-Language",
             required = false
-        ) locale: Locale
+        ) locale: Locale?
 
     ): String {
         return bookService.representBook(id, locale)

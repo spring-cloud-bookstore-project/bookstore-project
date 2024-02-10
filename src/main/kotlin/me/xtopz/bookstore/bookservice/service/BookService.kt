@@ -16,7 +16,7 @@ class BookService {
     @Autowired
     private lateinit var bookRepository: BookRepository
 
-    fun representBook(bookId: Long, locale: Locale): String {
+    fun representBook(bookId: Long, locale: Locale?): String {
         val desiredBook = bookRepository.findById(bookId).getOrNull()
             ?: return messageSource.getMessage("book.not-found", null, locale)
 
