@@ -1,18 +1,40 @@
 version: "2.24"
 
 services:
-
   bookstore-book:
-    build: "."
+    build:
+      context: "."
+      dockerfile: Dockerfile
+      args:
+        # Put args to use it when our java service is building by Docker. It's very flexible
+        # ${<ENV_VARIABLE_NAME>} - use environment variable from `.env` file,
+        # which read when we run docker compose
+        - GRADLE_PATH=${GRADLE_PATH}
+        - PROJECT_PATH=${PROJECT_PATH}
+    environment:
+      # Forwarding some environments variables from `.env` file
+      # to our (Java-based) service environment variables when service will be start
+      # It environments will be used within `application.yml`
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # Create a mount point with "${GRADLE_PATH}/.gradle" path on container,
+      # where ${GRADLE_PATH} is value of GRADLE_PATH env. variable from `.env` file
+      - gradle-cache:${GRADLE_PATH}/.gradle
     ports:
       - "80:8080"
+    # Spring service must be start after DB-based container
+    depends_on:
+      - bookstore-postgres
 
   bookstore-postgres:
     image: "postgres:16.1"
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: "12345"
-      POSTGRES_DB: "bookstore"
+      # Put environment variable from `.env` file to service env. variables
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
 
-
+volumes:
+  gradle-cache:
