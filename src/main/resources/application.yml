@@ -1,10 +1,11 @@
 hello-message: "Привет!!!"
 spring:
   datasource:
-    #Connection address may be directly or service name from docker-compose
-    url: jdbc:postgresql://bookstore-postgres:5432/bookstore
+    # Connection address may be directly or as service name from docker-compose
+    # ${POSTGRES_DB} and ${POSTGRES_PASSWORD} are env. variables
+    url: jdbc:postgresql://bookstore-postgres:5432/${POSTGRES_DB}
     username: postgres
-    password: 12345
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
