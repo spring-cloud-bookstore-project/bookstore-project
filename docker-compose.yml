@@ -2,6 +2,7 @@ version: "2.24"
 
 services:
   bookstore-book:
+    image: "bookstore-book-service"
     build:
       context: "."
       dockerfile: Dockerfile
@@ -23,9 +24,12 @@ services:
       - gradle-cache:${GRADLE_PATH}/.gradle
     ports:
       - "80:8080"
-    # Spring service must be start after DB-based container
+    # Spring service must be start after postgres DB service
     depends_on:
-      - bookstore-postgres
+      bookstore-postgres:
+        condition: service_healthy
+    networks:
+      - common-bookstore-network
 
   bookstore-postgres:
     image: "postgres:16.1"
@@ -35,6 +39,17 @@ services:
       # Put environment variable from `.env` file to service env. variables
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - common-bookstore-network
+    healthcheck:
+      test: "pg_isready -U postgres"
+      start_period: 10s
+      interval: 5s
+      retries: 5
+
 
 volumes:
   gradle-cache:
+
+networks:
+  common-bookstore-network:
