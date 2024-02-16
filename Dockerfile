@@ -1,31 +1,14 @@
-# Declare global build arg
-#ARG GRADLE_PATH=/home/gradle
-#ARG PROJECT_PATH=$GRADLE_PATH/project
-
-FROM gradle:8.4-jdk17-alpine AS gradle_build_stage
+FROM openjdk:17
 
 LABEL author="Dmitry Vanushkin"
 
-# Use arguments, then will be put here by docker-compose service configuration
-ARG GRADLE_PATH
-ARG PROJECT_PATH
-
-WORKDIR ${PROJECT_PATH}
-
-COPY ./src ./src
-COPY build.gradle.kts ./build.gradle.kts
-COPY settings.gradle.kts settings.gradle.kts
-COPY ./gradle.properties gragle.properties
-
-RUN gradle bootJar
-
-FROM openjdk:17
-
-## Use global args in this stage (openjdk:17)
-ARG PROJECT_PATH
+#RUN adduser --system book-service &&\
+#    addgroup --system spring-application &&\
+#    adduser book-service spring-application
 
 WORKDIR /home/application/
 
-COPY --from=gradle_build_stage ${PROJECT_PATH}/build/libs/*.jar ./app.jar
+COPY ./build/dependencies/ ./dependencies
+COPY ./build/libs/*-plain.jar ./app.jar
 
-ENTRYPOINT java -jar app.jar
+ENTRYPOINT java -cp app.jar:./dependencies/* me.xtopz.bookstore.bookservice.SampleApplicationKt
