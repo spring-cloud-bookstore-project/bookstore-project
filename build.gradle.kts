@@ -30,3 +30,9 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.create<Copy>("copyDependencies") {
+
+    from(configurations.runtimeClasspath)
+        .into(layout.buildDirectory.dir("dependencies"))
+}
