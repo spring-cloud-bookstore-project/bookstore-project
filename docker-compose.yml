@@ -1,10 +1,18 @@
 version: "2.24"
 
 services:
+  helloworld-project:
+    image: "helloworld-project"
+    build:
+      context: ./modules/helloworld-project/
+      dockerfile: Dockerfile
+    environment:
+      HELLOWORLD_USER_NAME: "Dmitry"
+
   bookstore-book:
     image: "book-service"
     build:
-      context: "."
+      context: ./modules/book-service/
       dockerfile: Dockerfile
     environment:
       # Forwarding some environments variables from `.env` file
