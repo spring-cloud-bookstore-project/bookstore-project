@@ -1,4 +1,3 @@
-hello-message: "Привет!!!"
 spring:
   datasource:
     # Connection address may be directly or as service name from docker-compose
