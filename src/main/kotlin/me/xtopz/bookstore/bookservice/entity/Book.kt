@@ -5,23 +5,15 @@ import jakarta.persistence.*
 @Entity
 class Book(
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(nullable = false)
-    val id: Long,
-
     @Column(nullable = false)
     var title: String,
-
-    @Column(nullable = false)
-    var isFiction: Boolean,
 
     @CollectionTable(
         name = "book_author",
     )
+
     @ElementCollection
     var authors: Set<String>,
-
 
     @Enumerated(
         value = EnumType.STRING
@@ -32,7 +24,7 @@ class Book(
     var genre: Set<Genre>,
 
     @Column
-    var chapter: Int,
+    var chapter: Int?,
 
     @Column(nullable = false)
     var publicationYear: Int,
@@ -40,7 +32,14 @@ class Book(
     @Column
     var pageNumber: Int
 
-)
+) {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(nullable = false)
+    val id: Long? = null
+
+}
 
 enum class Genre {
 
